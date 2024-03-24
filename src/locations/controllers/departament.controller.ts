@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common"
+import { Controller, Get, Param } from "@nestjs/common"
 
 import { DepartamentService } from "../services"
 
@@ -9,5 +9,10 @@ export class DepartamentController {
 	@Get()
 	async findAll() {
 		return this.departamentService.findAll()
+	}
+
+	@Get(":countryId")
+	async findByCountryId(@Param("countryId") countryId: number) {
+		return this.departamentService.findByCountryId(countryId)
 	}
 }

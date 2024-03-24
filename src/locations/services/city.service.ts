@@ -11,4 +11,8 @@ export class CityService {
 	async findAll(): Promise<City[]> {
 		return this.cityRepository.find()
 	}
+
+	async findByDepartamentId(departamentId: number): Promise<City[]> {
+		return this.cityRepository.find({ where: { departament: { id: departamentId } } })
+	}
 }

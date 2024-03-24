@@ -13,4 +13,8 @@ export class DepartamentService {
 	async findAll() {
 		return await this.departamentRepository.find()
 	}
+
+	async findByCountryId(countryId: number): Promise<Departament[]> {
+		return await this.departamentRepository.find({ where: { country: { id: countryId } } })
+	}
 }
