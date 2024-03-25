@@ -1,14 +1,10 @@
-import { Body, Controller, Post } from "@nestjs/common"
+import { Controller } from "@nestjs/common"
+import { ApiTags } from "@nestjs/swagger"
 
-import { CreateFamilyParentDto } from "../dtos"
 import { FamilyParentService } from "../services"
 
+@ApiTags("Family Parents")
 @Controller("users/family-parents")
 export class FamilyParentsController {
 	constructor(private readonly familyParentService: FamilyParentService) {}
-
-	@Post()
-	create(@Body() createFamilyParentDto: CreateFamilyParentDto) {
-		return this.familyParentService.create(createFamilyParentDto)
-	}
 }

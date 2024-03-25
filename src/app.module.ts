@@ -7,10 +7,11 @@ import { typeormConfig } from "db/typeorm.config"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
 import { AuthModule } from "./auth/auth.module"
+import { LocationsModule } from "./locations/locations.module"
+import { SchoolsModule } from "./schools/schools.module"
 import { envConfig, jwtConfig } from "./shared/config"
 import { SharedModule } from "./shared/shared.module"
 import { UsersModule } from "./users/users.module"
-import { LocationsModule } from './locations/locations.module';
 
 @Module({
 	imports: [
@@ -20,7 +21,8 @@ import { LocationsModule } from './locations/locations.module';
 		SharedModule,
 		AuthModule,
 		UsersModule,
-		LocationsModule
+		LocationsModule,
+		SchoolsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]
