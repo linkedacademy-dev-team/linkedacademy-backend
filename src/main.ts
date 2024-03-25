@@ -24,6 +24,8 @@ async function bootstrap() {
 		.setVersion(SWAGGER_VERSION)
 		.addServer(LOCAL_SERVER, "Local server")
 		.addServer(PRODUCTION_SERVER, "Production server")
+		.addBasicAuth()
+		.addBearerAuth()
 		.build()
 	const document = SwaggerModule.createDocument(app, config)
 
@@ -35,7 +37,7 @@ async function bootstrap() {
 	app.enableCors()
 	SwaggerModule.setup(SWAGGER_PATH, app, document, {
 		customSiteTitle: SWAGGER_TITLE,
-		swaggerOptions: { docExpansion: "none" },
+		swaggerOptions: { docExpansion: "list" },
 		useGlobalPrefix: true
 	})
 
