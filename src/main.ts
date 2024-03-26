@@ -27,12 +27,12 @@ async function bootstrap() {
 		.addBasicAuth()
 		.addBearerAuth()
 		.build()
+	const document = SwaggerModule.createDocument(app, config)
 
 	app.use(compression())
 	app.useGlobalPipes(new ValidationPipe())
 
 	app.setGlobalPrefix(GLOBAL_PREFIX, { exclude: [{ path: "/", method: RequestMethod.GET }] })
-	const document = SwaggerModule.createDocument(app, config)
 	expressInstance.disable(X_POWERED_BY)
 	app.enableCors()
 	SwaggerModule.setup(SWAGGER_PATH, app, document, {
