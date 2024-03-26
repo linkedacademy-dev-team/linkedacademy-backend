@@ -1,5 +1,6 @@
 import { UserToRole } from "src/auth/entities/userRole.entity"
 import { City } from "src/locations/entities"
+import { School } from "src/schools/entities"
 import { BaseEntity } from "src/shared/entities"
 import { Column, Entity, Index, ManyToOne, OneToMany } from "typeorm"
 
@@ -41,4 +42,7 @@ export class User extends BaseEntity implements IUser {
 
 	@ManyToOne(() => City, (city) => city.users)
 	city: City
+
+	@ManyToOne(() => School, (school) => school.users)
+	school: School
 }
