@@ -22,7 +22,10 @@
 		"typeorm": "npm run build && npx typeorm -d dist/db/typeorm.config.js",
 		"migration:generate": "cross-env NODE_ENV=local npm run typeorm -- migration:generate",
 		"migration:run": "cross-env NODE_ENV=local npm run typeorm -- migration:run",
-		"migration:revert": "npm run typeorm -- migration:revert"
+		"migration:revert": "npm run typeorm -- migration:revert",
+		"seed": "cross-env NODE_ENV=local ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:create -d dist/db/typeorm.config.js",
+		"seed:run": "cross-env NODE_ENV=local ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d dist/db/typeorm.config.js",
+		"seed:create": "cross-env NODE_ENV=local ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:create -d dist/db/typeorm.config.js"
 	},
 	"dependencies": {
 		"@faker-js/faker": "^8.4.1",
