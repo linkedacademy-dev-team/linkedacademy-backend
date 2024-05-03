@@ -12,6 +12,7 @@ import { SchoolsModule } from "./schools/schools.module"
 import { envConfig, jwtConfig } from "./shared/config"
 import { SharedModule } from "./shared/shared.module"
 import { UsersModule } from "./users/users.module"
+import { BroadcastChannelsModule } from './broadcast-channels/broadcast-channels.module';
 
 @Module({
 	imports: [
@@ -22,7 +23,8 @@ import { UsersModule } from "./users/users.module"
 		AuthModule,
 		UsersModule,
 		LocationsModule,
-		SchoolsModule
+		SchoolsModule,
+		BroadcastChannelsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]

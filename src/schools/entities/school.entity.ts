@@ -1,7 +1,17 @@
+import { BroadcastChannel } from "src/broadcast-channels/entities"
 import { City } from "src/locations/entities"
 import { BaseEntity } from "src/shared/entities"
 import { User } from "src/users/entites"
-import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm"
+import {
+	Column,
+	Entity,
+	Index,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	OneToOne
+} from "typeorm"
 
 import { SCHOOL_GENDERS, SCHOOL_SCHEDULES, SCHOOL_TYPES, SCHOOL_ZONES } from "../constants"
 import { Disability } from "./disability.entity"
@@ -151,4 +161,7 @@ export class School extends BaseEntity {
 	@ManyToMany(() => EthnicGroup)
 	@JoinTable()
 	ethnicGroups: EthnicGroup[]
+
+	@OneToOne(() => BroadcastChannel, (broadcastChannel) => broadcastChannel.school)
+	broadcastChannel: BroadcastChannel
 }

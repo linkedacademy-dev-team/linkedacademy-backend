@@ -1,4 +1,5 @@
 import { UserToRole } from "src/auth/entities/userRole.entity"
+import { BroadcastChannelToUser } from "src/broadcast-channels/entities/brodcast-channel-to-user.entity"
 import { City } from "src/locations/entities"
 import { School } from "src/schools/entities"
 import { BaseEntity } from "src/shared/entities"
@@ -45,4 +46,7 @@ export class User extends BaseEntity implements IUser {
 
 	@ManyToOne(() => School, (school) => school.users)
 	school: School
+
+	@OneToMany(() => BroadcastChannelToUser, (broadcastChannelToUser) => broadcastChannelToUser.user)
+	broadcastChannels: BroadcastChannelToUser[]
 }
