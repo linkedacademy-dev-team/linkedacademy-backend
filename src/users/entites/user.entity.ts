@@ -1,9 +1,9 @@
 import { UserToRole } from "src/auth/entities/userRole.entity"
-import { BroadcastChannelToUser } from "src/broadcast-channels/entities/brodcast-channel-to-user.entity"
+import { BroadcastChannel } from "src/broadcast-channels/entities"
 import { City } from "src/locations/entities"
 import { School } from "src/schools/entities"
 import { BaseEntity } from "src/shared/entities"
-import { Column, Entity, Index, ManyToOne, OneToMany } from "typeorm"
+import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm"
 
 import { IUser } from "../interfaces"
 
@@ -47,6 +47,7 @@ export class User extends BaseEntity implements IUser {
 	@ManyToOne(() => School, (school) => school.users)
 	school: School
 
-	@OneToMany(() => BroadcastChannelToUser, (broadcastChannelToUser) => broadcastChannelToUser.user)
-	broadcastChannels: BroadcastChannelToUser[]
+	@ManyToMany(() => BroadcastChannel)
+	@JoinTable()
+	broadcastChannels: BroadcastChannel[]
 }

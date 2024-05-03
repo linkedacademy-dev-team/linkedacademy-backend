@@ -3,10 +3,10 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 
 import { BroadcastChannelsController } from "./broadcast-channels.controller"
 import { BroadcastChannelsService } from "./broadcast-channels.service"
-import { BroadcastChannel, BroadcastChannelToUser, Post } from "./entities"
+import { BroadcastChannel, Post } from "./entities"
 
 @Module({
-	imports: [TypeOrmModule.forFeature([BroadcastChannel, BroadcastChannelToUser, Post])],
+	imports: [TypeOrmModule.forFeature([BroadcastChannel, Post])],
 	controllers: [BroadcastChannelsController],
 	providers: [BroadcastChannelsService]
 })
