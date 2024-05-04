@@ -1,25 +1,25 @@
 import { forwardRef, Inject, Injectable, UnauthorizedException } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { PasswordUtil } from "src/shared/utils"
-import { FamilyParentService, UserService } from "src/users/services"
+import { AttendantService, UserService } from "src/users/services"
 
-import { RegisterFamilyParentDto, SignInDto } from "../dtos"
+import { RegisterAttendantDto, SignInDto } from "../dtos"
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@Inject(forwardRef(() => UserService)) private readonly userService: UserService,
-		@Inject(forwardRef(() => FamilyParentService))
-		private readonly familyParentService: FamilyParentService,
+		@Inject(forwardRef(() => AttendantService))
+		private readonly attendantService: AttendantService,
 		private readonly passwordUtil: PasswordUtil,
 		private readonly jwtService: JwtService
 	) {}
 
-	async registerFamilyParent(
-		registerFamilyParentDto: RegisterFamilyParentDto
+	async registerAttendant(
+		registerAttendantDto: RegisterAttendantDto
 	): Promise<{ created: boolean }> {
 		try {
-			await this.familyParentService.create(registerFamilyParentDto)
+			await this.attendantService.create(registerAttendantDto)
 			return { created: true }
 		} catch (error) {
 			throw error

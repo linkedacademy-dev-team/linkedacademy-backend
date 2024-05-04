@@ -6,12 +6,12 @@ import { GeolocationUtil, PasswordUtil } from "src/shared/utils"
 import { UsernameUtil } from "src/shared/utils/username.util"
 import { Repository } from "typeorm"
 
-import { CreateFamilyParentDto } from "../dtos"
+import { CreateAttendantDto } from "../dtos"
 import { User } from "../entites"
 import { UserService } from "./user.service"
 
 @Injectable()
-export class FamilyParentService {
+export class AttendantService {
 	constructor(
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		private readonly userService: UserService,
@@ -21,8 +21,8 @@ export class FamilyParentService {
 		private readonly usernameUtil: UsernameUtil
 	) {}
 
-	async create(creteFamilyParentDto: CreateFamilyParentDto): Promise<User> {
-		const { email, password, coordinates, firstName, lastName } = creteFamilyParentDto
+	async create(creteAttendantDto: CreateAttendantDto): Promise<User> {
+		const { email, password, coordinates, firstName, lastName } = creteAttendantDto
 
 		try {
 			const [userExitsByEmail, userExitsByFullName] = await Promise.all([
@@ -36,16 +36,16 @@ export class FamilyParentService {
 			const hashedPassword = await this.passwordUtil.hashPassword(password)
 
 			const newUser = this.userRepository.create({
-				...creteFamilyParentDto,
+				...creteAttendantDto,
 				username: this.usernameUtil.generateUsernameFromEmail(email),
 				coordinates: coordinates?.length ? `POINT(${coordinates.join(" ")})` : null,
 				password: hashedPassword,
 				status: true,
-				city: { id: creteFamilyParentDto.cityId }
+				city: { id: creteAttendantDto.cityId }
 			})
 
 			await this.userRepository.save(newUser)
-			await this.userRoleService.assignRole(newUser.id, ROLES.FAMILY_PARENT)
+			await this.userRoleService.assignRole(newUser.id, ROLES.ATTENDANT)
 
 			return { ...newUser, password: undefined }
 		} catch (error) {
