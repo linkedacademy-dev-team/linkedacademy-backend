@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Post, UseGuards } from "@nestjs/common"
 import { ApiResponse, ApiTags } from "@nestjs/swagger"
 import { PublicAuthGuard } from "src/shared/guards"
 
-import { RegisterFamilyParentDto, SignInDto } from "../dtos"
+import { RegisterAttendantDto, SignInDto } from "../dtos"
 import { SignInSuccessResponseDto } from "../responses"
 import { AuthService } from "../services"
 
@@ -12,9 +12,9 @@ export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@UseGuards(PublicAuthGuard)
-	@Post("signup/family-parent")
-	async signUpFamilyParent(@Body() registerFamilyParentDto: RegisterFamilyParentDto) {
-		return this.authService.registerFamilyParent(registerFamilyParentDto)
+	@Post("signup/attendant")
+	async signUpAttendant(@Body() registerAttendantDto: RegisterAttendantDto) {
+		return this.authService.registerAttendant(registerAttendantDto)
 	}
 
 	@UseGuards(PublicAuthGuard)

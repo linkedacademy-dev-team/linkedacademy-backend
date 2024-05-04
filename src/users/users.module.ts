@@ -3,14 +3,13 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 import { AuthModule } from "src/auth/auth.module"
 import { SharedModule } from "src/shared/shared.module"
 
-import { FamilyParentsController } from "./controllers"
 import { User } from "./entites"
-import { FamilyParentService, UserService } from "./services"
+import { AttendantService, UserService } from "./services"
 
 @Module({
-	controllers: [FamilyParentsController],
+	controllers: [],
 	imports: [TypeOrmModule.forFeature([User]), SharedModule, forwardRef(() => AuthModule)],
-	providers: [FamilyParentService, UserService],
-	exports: [UserService, FamilyParentService]
+	providers: [AttendantService, UserService],
+	exports: [UserService, AttendantService]
 })
 export class UsersModule {}

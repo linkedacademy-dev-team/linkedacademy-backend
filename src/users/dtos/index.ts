@@ -1,1 +1,1 @@
-export * from "./family-parent/create-family-parent.dto"
+export * from "./attendant/create-attendant.dto"

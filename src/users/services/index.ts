@@ -1,2 +1,2 @@
-export * from "./family-parent.service"
+export * from "./attendant.service"
 export * from "./user.service"

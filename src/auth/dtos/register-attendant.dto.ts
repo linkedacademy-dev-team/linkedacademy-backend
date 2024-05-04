@@ -12,7 +12,7 @@ import {
 	Length
 } from "class-validator"
 
-export class RegisterFamilyParentDto {
+export class RegisterAttendantDto {
 	@IsString()
 	@IsNotEmpty()
 	@ApiProperty({
