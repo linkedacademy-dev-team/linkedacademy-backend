@@ -15,6 +15,13 @@ export class UserRoleService {
 		@Inject(forwardRef(() => UserService)) private readonly userService: UserService
 	) {}
 
+	async getRolesByUserId(userId: number) {
+		return this.userToRoleRepository.find({
+			where: { user: { id: userId } },
+			relations: { role: true }
+		})
+	}
+
 	async assignRole(userId: number, roleName: ROLES) {
 		const [user, role] = await Promise.all([
 			this.userService.findOneById(userId),
