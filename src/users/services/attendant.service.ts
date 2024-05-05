@@ -6,7 +6,7 @@ import { GeolocationUtil, PasswordUtil } from "src/shared/utils"
 import { UsernameUtil } from "src/shared/utils/username.util"
 import { Repository } from "typeorm"
 
-import { CreateAttendantDto } from "../dtos"
+import { CreateFamilyParentDto } from "../dtos"
 import { User } from "../entites"
 import { UserService } from "./user.service"
 
@@ -21,31 +21,29 @@ export class AttendantService {
 		private readonly usernameUtil: UsernameUtil
 	) {}
 
-	async create(creteAttendantDto: CreateAttendantDto): Promise<User> {
-		const { email, password, coordinates, firstName, lastName } = creteAttendantDto
+	async create(creteFamilyParentDto: CreateFamilyParentDto): Promise<User> {
+		const { email, password, coordinates } = creteFamilyParentDto
 
 		try {
-			const [userExitsByEmail, userExitsByFullName] = await Promise.all([
-				this.userService.findOneByEmail(email),
-				this.userService.findFromName(firstName, lastName)
-			])
+			const userExitsByEmail = await this.userService.findOneByEmail(email)
 
 			if (userExitsByEmail) throw new ConflictException("User with this email already exists")
-			if (userExitsByFullName) throw new ConflictException("User with this name already exists")
 
 			const hashedPassword = await this.passwordUtil.hashPassword(password)
 
 			const newUser = this.userRepository.create({
-				...creteAttendantDto,
+				...creteFamilyParentDto,
 				username: this.usernameUtil.generateUsernameFromEmail(email),
 				coordinates: coordinates?.length ? `POINT(${coordinates.join(" ")})` : null,
 				password: hashedPassword,
 				status: true,
-				city: { id: creteAttendantDto.cityId }
+				city: { id: creteFamilyParentDto.cityId }
 			})
 
-			await this.userRepository.save(newUser)
-			await this.userRoleService.assignRole(newUser.id, ROLES.ATTENDANT)
+			await Promise.all([
+				this.userRepository.save(newUser),
+				this.userRoleService.assignRole(newUser.id, ROLES.ATTENDANT)
+			])
 
 			return { ...newUser, password: undefined }
 		} catch (error) {
