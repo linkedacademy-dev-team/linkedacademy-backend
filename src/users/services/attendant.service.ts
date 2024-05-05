@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { ROLES } from "src/auth/constants"
 import { UserRoleService } from "src/auth/services"
 import { GeolocationUtil, PasswordUtil } from "src/shared/utils"
-import { UsernameUtil } from "src/shared/utils/username.util"
 import { Repository } from "typeorm"
 
 import { CreateFamilyParentDto } from "../dtos"
@@ -17,8 +16,7 @@ export class AttendantService {
 		private readonly userService: UserService,
 		private readonly passwordUtil: PasswordUtil,
 		private readonly geolocationUtil: GeolocationUtil,
-		private readonly userRoleService: UserRoleService,
-		private readonly usernameUtil: UsernameUtil
+		private readonly userRoleService: UserRoleService
 	) {}
 
 	async create(creteFamilyParentDto: CreateFamilyParentDto): Promise<User> {
@@ -33,17 +31,14 @@ export class AttendantService {
 
 			const newUser = this.userRepository.create({
 				...creteFamilyParentDto,
-				username: this.usernameUtil.generateUsernameFromEmail(email),
 				coordinates: coordinates?.length ? `POINT(${coordinates.join(" ")})` : null,
 				password: hashedPassword,
 				status: true,
 				city: { id: creteFamilyParentDto.cityId }
 			})
 
-			await Promise.all([
-				this.userRepository.save(newUser),
-				this.userRoleService.assignRole(newUser.id, ROLES.ATTENDANT)
-			])
+			await this.userRepository.save(newUser)
+			await this.userRoleService.assignRole(newUser.id, ROLES.ATTENDANT)
 
 			return { ...newUser, password: undefined }
 		} catch (error) {

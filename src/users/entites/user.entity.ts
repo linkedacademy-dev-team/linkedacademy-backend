@@ -21,10 +21,6 @@ export class User extends BaseEntity implements IUser {
 	@Column({ type: "boolean", default: false })
 	status: boolean
 
-	@Index("idx_user_username")
-	@Column({ type: "varchar", length: 40, unique: true })
-	username: string
-
 	@Index("idx_user_email")
 	@Column({ type: "varchar", length: 40, unique: true })
 	email: string
