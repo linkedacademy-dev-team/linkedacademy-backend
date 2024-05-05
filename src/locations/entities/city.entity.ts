@@ -10,6 +10,9 @@ export class City extends BaseEntity {
 	@Column({ type: "varchar", length: 40 })
 	name: string
 
+	@Column({ type: "point", nullable: true })
+	coordinates: string
+
 	@ManyToOne(() => Departament, (departament) => departament.cities)
 	departament: Departament
 
