@@ -9,6 +9,9 @@ export class PermissionService {
 		@InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>
 	) {}
 
+	async getAllPermissions() {
+		return this.permissionRepository.find()
+	}
 	async findByRoles(roleIds: number[]) {
 		return this.permissionRepository.find({ where: { role: { id: In(roleIds) } } })
 	}
