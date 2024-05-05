@@ -4,6 +4,8 @@ import { SharedModule } from "src/shared/shared.module"
 import { UsersModule } from "src/users/users.module"
 
 import { AuthController } from "./controllers"
+import { PermissionsController } from "./controllers/permissions.controller"
+import { RolesController } from "./controllers/roles.controller"
 import { Role } from "./entities"
 import { Permission } from "./entities/permission.entity"
 import { UserToRole } from "./entities/userRole.entity"
@@ -18,6 +20,6 @@ import { AuthService } from "./services/auth.service"
 	],
 	providers: [UserRoleService, RoleService, AuthService, PermissionService],
 	exports: [UserRoleService, RoleService, PermissionService],
-	controllers: [AuthController]
+	controllers: [AuthController, PermissionsController, RolesController]
 })
 export class AuthModule {}
