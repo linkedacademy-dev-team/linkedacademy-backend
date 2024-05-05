@@ -3,10 +3,9 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { ROLES } from "src/auth/constants"
 import { UserRoleService } from "src/auth/services"
 import { GeolocationUtil, PasswordUtil } from "src/shared/utils"
-import { UsernameUtil } from "src/shared/utils/username.util"
 import { Repository } from "typeorm"
 
-import { CreateAttendantDto } from "../dtos"
+import { CreateFamilyParentDto } from "../dtos"
 import { User } from "../entites"
 import { UserService } from "./user.service"
 
@@ -17,31 +16,25 @@ export class AttendantService {
 		private readonly userService: UserService,
 		private readonly passwordUtil: PasswordUtil,
 		private readonly geolocationUtil: GeolocationUtil,
-		private readonly userRoleService: UserRoleService,
-		private readonly usernameUtil: UsernameUtil
+		private readonly userRoleService: UserRoleService
 	) {}
 
-	async create(creteAttendantDto: CreateAttendantDto): Promise<User> {
-		const { email, password, coordinates, firstName, lastName } = creteAttendantDto
+	async create(creteFamilyParentDto: CreateFamilyParentDto): Promise<User> {
+		const { email, password, coordinates } = creteFamilyParentDto
 
 		try {
-			const [userExitsByEmail, userExitsByFullName] = await Promise.all([
-				this.userService.findOneByEmail(email),
-				this.userService.findFromName(firstName, lastName)
-			])
+			const userExitsByEmail = await this.userService.findOneByEmail(email)
 
 			if (userExitsByEmail) throw new ConflictException("User with this email already exists")
-			if (userExitsByFullName) throw new ConflictException("User with this name already exists")
 
 			const hashedPassword = await this.passwordUtil.hashPassword(password)
 
 			const newUser = this.userRepository.create({
-				...creteAttendantDto,
-				username: this.usernameUtil.generateUsernameFromEmail(email),
+				...creteFamilyParentDto,
 				coordinates: coordinates?.length ? `POINT(${coordinates.join(" ")})` : null,
 				password: hashedPassword,
 				status: true,
-				city: { id: creteAttendantDto.cityId }
+				city: { id: creteFamilyParentDto.cityId }
 			})
 
 			await this.userRepository.save(newUser)

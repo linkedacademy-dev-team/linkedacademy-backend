@@ -1,4 +1,5 @@
 export enum FEATURES {
 	USERS = "USERS",
-	AUTH = "AUTH"
+	AUTH = "AUTH",
+	SCHOOLS = "SCHOOLS"
 }

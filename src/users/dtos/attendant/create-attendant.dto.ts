@@ -11,7 +11,7 @@ import {
 	Length
 } from "class-validator"
 
-export class CreateAttendantDto {
+export class CreateFamilyParentDto {
 	@IsString()
 	@IsNotEmpty()
 	readonly firstName: string

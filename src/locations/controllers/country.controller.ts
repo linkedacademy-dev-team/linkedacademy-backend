@@ -1,5 +1,6 @@
-import { Controller, Get, HttpStatus } from "@nestjs/common"
+import { Controller, Get, HttpStatus, UseGuards } from "@nestjs/common"
 import { ApiResponse, ApiTags } from "@nestjs/swagger"
+import { PublicAuthGuard } from "src/shared/guards"
 
 import { FindAllCountriesResponseDto } from "../responses"
 import { CountryService } from "../services"
@@ -14,6 +15,7 @@ export class CountryController {
 		type: [FindAllCountriesResponseDto],
 		description: "Find all countries"
 	})
+	@UseGuards(PublicAuthGuard)
 	@Get()
 	async findAll() {
 		return this.countryService.findAll()
