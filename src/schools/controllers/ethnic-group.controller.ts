@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateEthnicGroupDto } from "../dtos/ethnic-group/create-ethnic-group.dto"
 import { UpdateEthnicGroupDto } from "../dtos/ethnic-group/update-ethnic-group.dto"
@@ -8,6 +8,12 @@ import { EthnicGroupService } from "../services/ethnic-group.service"
 @Controller("ethnic-groups")
 export class EthnicGroupController {
 	constructor(private readonly ethnicGroupService: EthnicGroupService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublicEthnicGroup() {
+		return this.ethnicGroupService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()

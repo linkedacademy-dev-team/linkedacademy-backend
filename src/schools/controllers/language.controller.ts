@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateLanguageDto } from "../dtos/languages/create-language.dto"
 import { UpdateLanguageDto } from "../dtos/languages/update-language.dto"
@@ -8,6 +8,12 @@ import { LanguageService } from "../services/language.service"
 @Controller("languages")
 export class LanguageController {
 	constructor(private readonly languageService: LanguageService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublicLanguages() {
+		return this.languageService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateEducationModeDto } from "../dtos/education-mode/create-education-mode.dto"
 import { UpdateEducationModeDto } from "../dtos/education-mode/update-education-mode.dto"
@@ -8,6 +8,12 @@ import { EducationModeService } from "../services/education-mode.service"
 @Controller("education-modes")
 export class EducationModeController {
 	constructor(private readonly educationModeService: EducationModeService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublicEducationMode() {
+		return this.educationModeService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()
