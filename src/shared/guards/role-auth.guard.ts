@@ -49,7 +49,7 @@ export class RoleAuthGuard implements CanActivate {
 					return permission.canRead
 				case "POST":
 					return permission.canWrite
-				case "PUT":
+				case "PUT" || "PATCH":
 					return permission.canUpdate
 				case "DELETE":
 					return permission.canDelete
