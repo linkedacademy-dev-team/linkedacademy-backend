@@ -12,6 +12,10 @@ export class DisabilityService {
 		@InjectRepository(Disability) private readonly disabilityRepository: Repository<Disability>
 	) {}
 
+	async getAll() {
+		return this.disabilityRepository.find()
+	}
+
 	async create(createDisabilityDto: CreateDisabilityDto) {
 		return this.disabilityRepository.save(createDisabilityDto)
 	}
