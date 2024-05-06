@@ -19,4 +19,8 @@ export class DisabilityService {
 	async update(id: number, updateDisabilityDto: UpdateDisabilityDto) {
 		return this.disabilityRepository.update(id, updateDisabilityDto)
 	}
+
+	async delete(id: number) {
+		return this.disabilityRepository.softDelete(id)
+	}
 }
