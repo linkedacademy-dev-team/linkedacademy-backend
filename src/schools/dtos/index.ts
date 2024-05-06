@@ -1,1 +1,1 @@
-export * from "./create-school.dto"
+export * from "./disabilities/create-school.dto"
