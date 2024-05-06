@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 
 import { CreateSpecialityDto } from "../dtos/specialities/create-speciality.dto"
-import { UpdateSpecialityeDto } from "../dtos/specialities/update-speciality.dto"
+import { UpdateSpecialityDto } from "../dtos/specialities/update-speciality.dto"
 import { Speciality } from "../entities"
 
 @Injectable()
@@ -20,7 +20,7 @@ export class SpecialityService {
 		return this.specialityRepository.find()
 	}
 
-	async update(id: number, updateSpecialityDto: UpdateSpecialityeDto) {
+	async update(id: number, updateSpecialityDto: UpdateSpecialityDto) {
 		return this.specialityRepository.update(id, updateSpecialityDto)
 	}
 
