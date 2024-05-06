@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Put, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
 import { RoleAuthGuard } from "src/shared/guards"
 
 import { CreateDisabilityDto } from "../dtos/disabilities/create-disability.dto"
@@ -8,6 +8,12 @@ import { DisabilityService } from "../services/disability.service"
 @Controller("disabilities")
 export class DisabilityController {
 	constructor(private readonly disabilityService: DisabilityService) {}
+
+	@UseGuards(RoleAuthGuard)
+	@Get()
+	async getAll() {
+		return this.disabilityService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Post()
