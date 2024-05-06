@@ -33,7 +33,8 @@ export class RoleAuthGuard implements CanActivate {
 		if (userRoles.length === 0) throw new UnauthorizedException("User has no roles")
 
 		const requestedFeature = this.getRequestedFeature(request)
-		const parsedFeature: FEATURES = FEATURES[requestedFeature]
+		const normalizedFeature = requestedFeature.split("-").join("_")
+		const parsedFeature: FEATURES = FEATURES[normalizedFeature]
 
 		if (!parsedFeature) throw new UnauthorizedException("Invalid feature requested")
 
