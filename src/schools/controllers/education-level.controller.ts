@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateEducationLevelDto } from "../dtos/education-levels/create-education-level.dto"
 import { EducationLevelService } from "../services/education-levels.service"
@@ -7,6 +7,12 @@ import { EducationLevelService } from "../services/education-levels.service"
 @Controller("education-levels")
 export class EducationLevelController {
 	constructor(private readonly educationLevelService: EducationLevelService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublicEducationLevels() {
+		return this.educationLevelService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()

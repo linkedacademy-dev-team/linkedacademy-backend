@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateSessionDto } from "../dtos/sessions/create-session.dto"
 import { UpdateSessionDto } from "../dtos/sessions/update-sessions.dto"
@@ -8,6 +8,12 @@ import { SessionService } from "../services/session.service"
 @Controller("sessions")
 export class SessionController {
 	constructor(private readonly sessionService: SessionService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublic() {
+		return this.sessionService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()

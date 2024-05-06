@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateSpecialityDto } from "../dtos/specialities/create-speciality.dto"
 import { UpdateSpecialityDto } from "../dtos/specialities/update-speciality.dto"
@@ -8,6 +8,12 @@ import { SpecialityService } from "../services/speciality.service"
 @Controller("specialities")
 export class SpecialityController {
 	constructor(private readonly specialityService: SpecialityService) {}
+
+	@UseGuards(PublicAuthGuard)
+	@Get("public")
+	async getAllPublic() {
+		return this.specialityService.getAll()
+	}
 
 	@UseGuards(RoleAuthGuard)
 	@Get()
