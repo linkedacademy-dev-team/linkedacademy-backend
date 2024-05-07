@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { AuthModule } from "src/auth/auth.module"
+import { SharedModule } from "src/shared/shared.module"
 
 import { SchoolsController } from "./controllers"
 import { DisabilityController } from "./controllers/disability.controller"
@@ -41,7 +42,8 @@ import { SpecialityService } from "./services/speciality.service"
 			Speciality,
 			Language
 		]),
-		AuthModule
+		AuthModule,
+		SharedModule
 	],
 	controllers: [
 		SchoolsController,
