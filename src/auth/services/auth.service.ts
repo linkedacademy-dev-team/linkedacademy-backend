@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from "@nestjs/common"
+import {
+	forwardRef,
+	Inject,
+	Injectable,
+	InternalServerErrorException,
+	UnauthorizedException
+} from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { PasswordUtil } from "src/shared/utils"
 import { AttendantService, UserService } from "src/users/services"
@@ -15,12 +21,17 @@ export class AuthService {
 		private readonly jwtService: JwtService
 	) {}
 
-	async registerAttendant(
-		registerAttendantDto: RegisterAttendantDto
-	): Promise<{ created: boolean }> {
+	async registerAttendant(registerAttendantDto: RegisterAttendantDto) {
 		try {
-			await this.attendantService.create(registerAttendantDto)
-			return { created: true }
+			const attendant = await this.attendantService.create(registerAttendantDto)
+
+			if (!attendant) throw new InternalServerErrorException("Failed to create attendant")
+
+			const payload = { sub: attendant.id }
+
+			const access_token = this.jwtService.sign(payload)
+
+			return { created: true, access_token }
 		} catch (error) {
 			throw error
 		}
