@@ -13,6 +13,7 @@ import {
 import { SCHOOL_GENDERS, SCHOOL_SCHEDULES, SCHOOL_TYPES, SCHOOL_ZONES } from "src/schools/constants"
 
 export class FilterSchoolDto {
+	@IsOptional()
 	@IsNumber()
 	@IsNotEmpty()
 	@Type(() => Number)
