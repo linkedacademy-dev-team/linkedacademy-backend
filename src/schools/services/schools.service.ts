@@ -15,27 +15,39 @@ export class SchoolsService {
 	) {}
 
 	async filter(filter: FilterSchoolDto) {
-		const { coordinates, distance, cityId, ...rest } = filter
+		const { coordinates: userCoordinates, distance, ...rest } = filter
+		const [latitude, longitude] = userCoordinates.map((coordinate) => +coordinate)
 
-		const [latitude, longitude] = coordinates.map((coordinate) => +coordinate)
-		const distanceInMeters = this.geolocationUtil.convertKilometersToMeters(distance)
-
-		const schools = this.schoolRepository
+		const queryBuilder = this.schoolRepository
 			.createQueryBuilder("school")
-			.where("school.cityId = :cityId", { cityId })
-			.andWhere("is_within_radius(coordinates,:latitude, :longitude, :distance) = 1", {
-				longitude,
-				latitude,
-				distance: distanceInMeters
-			})
+			.addSelect(
+				`ST_Distance(school.coordinates, ST_GeomFromText('POINT(:latitude :longitude)'))`,
+				"distanceFromCoordinates"
+			)
+			.where(
+				"ST_Distance(school.coordinates, ST_GeomFromText('POINT(:latitude :longitude)')) <= :distance",
+				{ latitude, longitude, distance: distance / 100 }
+			)
 
 		for (const key in rest) {
 			if (filter[key]) {
-				schools.andWhere(`school.${key} = :${key}`, { [key]: filter[key] })
+				queryBuilder.andWhere(`school.${key} = :${key}`, { [key]: filter[key] })
 			}
 		}
 
-		return await schools.getMany()
+		const result = await queryBuilder.getRawAndEntities()
+		const { raw, entities } = result
+
+		const schoolsWithDistance = entities.map((school, index) => ({
+			...school,
+			distance: +raw[index].distanceFromCoordinates * 100
+		}))
+
+		return {
+			schools: schoolsWithDistance,
+			total: schoolsWithDistance.length,
+			coordinates: [latitude, longitude]
+		}
 	}
 
 	async create(createSchoolDto: CreateSchoolDto): Promise<void> {
