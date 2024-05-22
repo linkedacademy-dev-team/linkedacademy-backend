@@ -22,6 +22,8 @@ export class JwtAuthGuard implements CanActivate {
 
 		if (!userId) throw new UnauthorizedException("Invalid auth payload")
 
+		request.userId = userId
+
 		return true
 	}
 
