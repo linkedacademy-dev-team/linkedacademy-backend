@@ -23,8 +23,13 @@ export class SchoolsService {
 	) {
 		const { take, skip } = this.paginationUtil.getPagination(paginationDto)
 
+		const { name: nameFilter } = filterDashboardSchoolDto
+
 		const [schools, total] = await this.schoolRepository.findAndCount({
-			where: { city: { id: cityId }, name: Like(`%${filterDashboardSchoolDto.name}%`) },
+			where: {
+				city: { id: cityId },
+				name: nameFilter ? Like(`%${nameFilter}%`) : Like("%%")
+			},
 			relations: { city: true, schoolParent: true },
 			take,
 			skip
