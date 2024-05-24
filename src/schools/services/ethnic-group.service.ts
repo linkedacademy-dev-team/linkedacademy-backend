@@ -12,6 +12,10 @@ export class EthnicGroupService {
 		@InjectRepository(EthnicGroup) private readonly ethnicGroupRepository: Repository<EthnicGroup>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.ethnicGroupRepository.findOne({ where: { id } })
+	}
+
 	async create(createEthnicGroupDto: CreateEthnicGroupDto) {
 		return this.ethnicGroupRepository.save(createEthnicGroupDto)
 	}

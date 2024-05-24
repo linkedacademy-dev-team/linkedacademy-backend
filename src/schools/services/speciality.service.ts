@@ -12,6 +12,10 @@ export class SpecialityService {
 		@InjectRepository(Speciality) private readonly specialityRepository: Repository<Speciality>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.specialityRepository.findOne({ where: { id } })
+	}
+
 	async create(createSpecialityDto: CreateSpecialityDto) {
 		return this.specialityRepository.save(createSpecialityDto)
 	}

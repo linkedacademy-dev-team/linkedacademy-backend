@@ -12,6 +12,10 @@ export class DisabilityService {
 		@InjectRepository(Disability) private readonly disabilityRepository: Repository<Disability>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.disabilityRepository.findOne({ where: { id } })
+	}
+
 	async getAll() {
 		return this.disabilityRepository.find()
 	}

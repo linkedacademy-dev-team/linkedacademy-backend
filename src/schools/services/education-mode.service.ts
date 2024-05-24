@@ -13,6 +13,10 @@ export class EducationModeService {
 		private readonly educationModeRepository: Repository<EducationModel>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.educationModeRepository.findOne({ where: { id } })
+	}
+
 	async create(createEducationModeDto: CreateEducationModeDto) {
 		return this.educationModeRepository.save(createEducationModeDto)
 	}

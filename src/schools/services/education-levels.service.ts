@@ -13,6 +13,10 @@ export class EducationLevelService {
 		private readonly educationLevelRepository: Repository<EducationLevels>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.educationLevelRepository.findOne({ where: { id } })
+	}
+
 	async getAll() {
 		return this.educationLevelRepository.find()
 	}
