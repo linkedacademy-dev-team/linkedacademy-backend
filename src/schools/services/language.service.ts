@@ -12,6 +12,10 @@ export class LanguageService {
 		@InjectRepository(Language) private readonly languageRepository: Repository<Language>
 	) {}
 
+	async findOneById(id: number) {
+		return await this.languageRepository.findOne({ where: { id } })
+	}
+
 	async create(createLanguageDto: CreateLanguageDto) {
 		return this.languageRepository.save(createLanguageDto)
 	}

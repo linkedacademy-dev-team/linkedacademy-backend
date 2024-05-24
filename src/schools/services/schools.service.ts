@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { PaginationDto } from "src/shared/dtos"
 import { PaginationUtil } from "src/shared/utils/pagination.util"
@@ -7,6 +7,7 @@ import { Like, Repository } from "typeorm"
 import { CreateSchoolDto } from "../dtos"
 import { FilterDashboardSchoolDto } from "../dtos/schools/filter-dashboard-school.dto"
 import { FilterSchoolDto } from "../dtos/schools/filter-school.dto"
+import { GetSchoolExtraInfoDto } from "../dtos/schools/get-school-extra-info.dto"
 import { School } from "../entities"
 
 @Injectable()
@@ -15,6 +16,97 @@ export class SchoolsService {
 		@InjectRepository(School) private readonly schoolRepository: Repository<School>,
 		private readonly paginationUtil: PaginationUtil
 	) {}
+
+	async activateOrDeactivateSchoolAditionalInfo(
+		getSchoolExtraInfoDto: GetSchoolExtraInfoDto,
+		activate: boolean
+	) {
+		const { relation, schoolId, relationId } = getSchoolExtraInfoDto
+
+		const school = await this.schoolRepository
+			.createQueryBuilder("school")
+			.where("school.id = :id", { id: schoolId })
+			.leftJoinAndSelect(relation, relation)
+		// .getOne()
+
+		if (!school) throw new NotFoundException("School not found")
+
+		let relationAsSingle: string
+
+		const parsedRelation = relation.toLowerCase()
+
+		switch (parsedRelation) {
+			case "specialities":
+				relationAsSingle = "Speciality"
+				break
+			case "disabilities":
+				relationAsSingle = "Disability"
+				break
+			case "ethnicGroups":
+				relationAsSingle = "EthnicGroup"
+				break
+			case "educationLevels":
+				relationAsSingle = "EducationLevel"
+				break
+			case "educationModes":
+				relationAsSingle = "EducationMode"
+				break
+			case "languages":
+				relationAsSingle = "Language"
+				break
+			case "sessions":
+				relationAsSingle = "Session"
+				break
+			default:
+				break
+		}
+
+		const relationEntity = await this.schoolRepository.manager.findOne(relationAsSingle, {
+			where: { id: +relationId }
+		})
+
+		if (!relationEntity) throw new NotFoundException("Entity not found")
+
+		if (activate === false) {
+			await this.schoolRepository
+				.createQueryBuilder("school")
+				.relation(relation)
+				.of(+schoolId)
+				.add(relationEntity)
+		} else {
+			this.schoolRepository
+				.createQueryBuilder("school")
+				.relation(relation)
+				.of(+schoolId)
+				.remove(relationEntity)
+		}
+	}
+
+	async getSchoolAdditionalInfo(getSchoolExtraInfoDto: GetSchoolExtraInfoDto) {
+		const { relation, schoolId } = getSchoolExtraInfoDto
+
+		const school = await this.schoolRepository
+			.createQueryBuilder("school")
+			.relation(relation)
+			.of(+schoolId)
+			.loadMany()
+
+		return school
+	}
+
+	async getSchoolById(id: number) {
+		const school = await this.schoolRepository.findOne({
+			where: { id },
+			relations: {
+				city: { departament: { cities: true } },
+				schoolParent: true
+			}
+		})
+
+		if (!school) throw new NotFoundException("School not found")
+
+		return school
+	}
 
 	async getByCityID(
 		paginationDto: PaginationDto,
@@ -54,6 +146,8 @@ export class SchoolsService {
 				"ST_Distance(school.coordinates, ST_GeomFromText('POINT(:latitude :longitude)')) <= :distance",
 				{ latitude, longitude, distance: distance / 100 }
 			)
+			.leftJoinAndSelect("school.city", "city")
+			.leftJoinAndSelect("school.schoolParent", "schoolParent")
 
 		for (const key in rest) {
 			if (filter[key]) {
@@ -86,5 +180,9 @@ export class SchoolsService {
 			...rest
 		})
 		await this.schoolRepository.save(school)
+	}
+
+	async findOneById(id: number): Promise<School> {
+		return await this.schoolRepository.findOne({ where: { id } })
 	}
 }

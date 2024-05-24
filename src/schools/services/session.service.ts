@@ -10,6 +10,10 @@ import { Session } from "../entities"
 export class SessionService {
 	constructor(@InjectRepository(Session) private readonly sessionRepository: Repository<Session>) {}
 
+	async findOneById(id: number) {
+		return await this.sessionRepository.findOne({ where: { id } })
+	}
+
 	async create(createSessionDto: CreateSessionDto) {
 		return this.sessionRepository.save(createSessionDto)
 	}
