@@ -67,7 +67,7 @@ export class SchoolsService {
 
 		if (!relationEntity) throw new NotFoundException("Entity not found")
 
-		if (activate === false) {
+		if (String(activate) === "1") {
 			await this.schoolRepository
 				.createQueryBuilder("school")
 				.relation(relation)
