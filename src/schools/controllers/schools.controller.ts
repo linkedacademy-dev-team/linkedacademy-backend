@@ -41,7 +41,7 @@ export class SchoolsController {
 
 	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
-	@Get(":cityId")
+	@Get("per-city/:cityId")
 	async getByCityID(
 		@Query() paginationDto: PaginationDto,
 		@Query() filterDashboardSchoolDto: FilterDashboardSchoolDto,
