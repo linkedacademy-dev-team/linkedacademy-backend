@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+	UseInterceptors
+} from "@nestjs/common"
+import { JwtAuthGuard, PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import { LogGuard } from "src/shared/guards/log.guard"
 
 import { CreateSessionDto } from "../dtos/sessions/create-session.dto"
 import { UpdateSessionDto } from "../dtos/sessions/update-sessions.dto"
@@ -21,13 +32,17 @@ export class SessionController {
 		return this.sessionService.getAll()
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Post()
 	async create(@Body() createSessionDto: CreateSessionDto) {
 		await this.sessionService.create(createSessionDto)
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Put(":id")
 	async update(@Param("id") id: number, @Body() updateSessionDto: UpdateSessionDto) {
 		await this.sessionService.update(id, updateSessionDto)

@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+	UseInterceptors
+} from "@nestjs/common"
+import { JwtAuthGuard, PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import { LogGuard } from "src/shared/guards/log.guard"
 
 import { CreateEthnicGroupDto } from "../dtos/ethnic-group/create-ethnic-group.dto"
 import { UpdateEthnicGroupDto } from "../dtos/ethnic-group/update-ethnic-group.dto"
@@ -21,13 +32,17 @@ export class EthnicGroupController {
 		return this.ethnicGroupService.getAll()
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Post()
 	async createEthnicGroup(@Body() createEthnicGroupDto: CreateEthnicGroupDto) {
 		return this.ethnicGroupService.create(createEthnicGroupDto)
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Put(":id")
 	async updateEthnicGroup(
 		@Param("id") id: number,

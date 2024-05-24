@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+	UseInterceptors
+} from "@nestjs/common"
+import { JwtAuthGuard, PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import { LogGuard } from "src/shared/guards/log.guard"
 
 import { CreateSpecialityDto } from "../dtos/specialities/create-speciality.dto"
 import { UpdateSpecialityDto } from "../dtos/specialities/update-speciality.dto"
@@ -21,13 +32,17 @@ export class SpecialityController {
 		return this.specialityService.getAll()
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Post()
 	async create(@Body() createSpecialityDto: CreateSpecialityDto) {
 		await this.specialityService.create(createSpecialityDto)
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Put(":id")
 	async update(@Param("id") id: number, @Body() updateSpecialityDto: UpdateSpecialityDto) {
 		await this.specialityService.update(id, updateSpecialityDto)
