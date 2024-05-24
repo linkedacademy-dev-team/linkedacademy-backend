@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+	UseInterceptors
+} from "@nestjs/common"
+import { JwtAuthGuard, PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import { LogGuard } from "src/shared/guards/log.guard"
 
 import { CreateLanguageDto } from "../dtos/languages/create-language.dto"
 import { UpdateLanguageDto } from "../dtos/languages/update-language.dto"
@@ -21,13 +32,17 @@ export class LanguageController {
 		return this.languageService.getAll()
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Post()
 	async createLanguage(@Body() createLanguageDto: CreateLanguageDto) {
 		return this.languageService.create(createLanguageDto)
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Put(":id")
 	async updateLanguage(@Param("id") id: number, @Body() updateLanguageDto: UpdateLanguageDto) {
 		return this.languageService.update(+id, updateLanguageDto)

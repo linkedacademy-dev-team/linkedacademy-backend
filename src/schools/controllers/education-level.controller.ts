@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
-import { PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+	UseInterceptors
+} from "@nestjs/common"
+import { JwtAuthGuard, PublicAuthGuard, RoleAuthGuard } from "src/shared/guards"
+import { LogGuard } from "src/shared/guards/log.guard"
 
 import { CreateEducationLevelDto } from "../dtos/education-levels/create-education-level.dto"
 import { EducationLevelService } from "../services/education-levels.service"
@@ -20,13 +31,17 @@ export class EducationLevelController {
 		return this.educationLevelService.getAll()
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Post()
 	async createEducationLevel(@Body() createEducationLevelDto: CreateEducationLevelDto) {
 		return this.educationLevelService.create(createEducationLevelDto)
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
+	@UseInterceptors(LogGuard)
 	@Put(":id")
 	async updateEducationLevel(
 		@Param("id") id: number,

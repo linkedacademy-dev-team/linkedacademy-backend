@@ -9,6 +9,7 @@ import { AppService } from "./app.service"
 import { AuthModule } from "./auth/auth.module"
 import { BroadcastChannelsModule } from "./broadcast-channels/broadcast-channels.module"
 import { LocationsModule } from "./locations/locations.module"
+import { LogsModule } from "./logs/logs.module"
 import { SchoolsModule } from "./schools/schools.module"
 import { envConfig, jwtConfig } from "./shared/config"
 import { SharedModule } from "./shared/shared.module"
@@ -24,7 +25,8 @@ import { UsersModule } from "./users/users.module"
 		UsersModule,
 		LocationsModule,
 		SchoolsModule,
-		BroadcastChannelsModule
+		BroadcastChannelsModule,
+		LogsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]
