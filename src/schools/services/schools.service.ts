@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { GeolocationUtil } from "src/shared/utils"
-import { Repository } from "typeorm"
+import { PaginationDto } from "src/shared/dtos"
+import { PaginationUtil } from "src/shared/utils/pagination.util"
+import { Like, Repository } from "typeorm"
 
 import { CreateSchoolDto } from "../dtos"
+import { FilterDashboardSchoolDto } from "../dtos/schools/filter-dashboard-school.dto"
 import { FilterSchoolDto } from "../dtos/schools/filter-school.dto"
 import { School } from "../entities"
 
@@ -11,8 +13,27 @@ import { School } from "../entities"
 export class SchoolsService {
 	constructor(
 		@InjectRepository(School) private readonly schoolRepository: Repository<School>,
-		private readonly geolocationUtil: GeolocationUtil
+		private readonly paginationUtil: PaginationUtil
 	) {}
+
+	async getByCityID(
+		paginationDto: PaginationDto,
+		filterDashboardSchoolDto: FilterDashboardSchoolDto,
+		cityId: number
+	) {
+		const { take, skip } = this.paginationUtil.getPagination(paginationDto)
+
+		const [schools, total] = await this.schoolRepository.findAndCount({
+			where: { city: { id: cityId }, name: Like(`%${filterDashboardSchoolDto.name}%`) },
+			relations: { city: true, schoolParent: true },
+			take,
+			skip
+		})
+
+		const pagination = this.paginationUtil.getPaginationResponse(paginationDto, total)
+
+		return { schools, pagination }
+	}
 
 	async filter(filter: FilterSchoolDto) {
 		const { coordinates: userCoordinates, distance, ...rest } = filter

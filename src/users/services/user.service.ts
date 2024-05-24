@@ -13,13 +13,13 @@ export class UserService {
 
 		if (!user) throw new NotFoundException("User not found")
 
-		const { firstName, lastName, id: userId, email } = user
+		const { firstName, lastName, id: userId, email, city } = user
 
-		return { firstName, lastName, id: userId, email }
+		return { firstName, lastName, id: userId, email, cityId: city.id }
 	}
 
 	async findOneById(id: number): Promise<User> {
-		return await this.userRepository.findOne({ where: { id } })
+		return await this.userRepository.findOne({ where: { id }, relations: { city: true } })
 	}
 
 	async findOneByEmail(email: string): Promise<User> {
