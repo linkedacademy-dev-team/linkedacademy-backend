@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { PaginationDto } from "src/shared/dtos"
 import { PaginationUtil } from "src/shared/utils/pagination.util"
-import { Repository } from "typeorm"
+import { Like, Repository } from "typeorm"
 
 import { CreateSchoolDto } from "../dtos"
+import { FilterDashboardSchoolDto } from "../dtos/schools/filter-dashboard-school.dto"
 import { FilterSchoolDto } from "../dtos/schools/filter-school.dto"
 import { School } from "../entities"
 
@@ -15,11 +16,15 @@ export class SchoolsService {
 		private readonly paginationUtil: PaginationUtil
 	) {}
 
-	async getByCityID(paginationDto: PaginationDto, cityId: number) {
+	async getByCityID(
+		paginationDto: PaginationDto,
+		filterDashboardSchoolDto: FilterDashboardSchoolDto,
+		cityId: number
+	) {
 		const { take, skip } = this.paginationUtil.getPagination(paginationDto)
 
 		const [schools, total] = await this.schoolRepository.findAndCount({
-			where: { city: { id: cityId } },
+			where: { city: { id: cityId }, name: Like(`%${filterDashboardSchoolDto.name}%`) },
 			relations: { city: true, schoolParent: true },
 			take,
 			skip

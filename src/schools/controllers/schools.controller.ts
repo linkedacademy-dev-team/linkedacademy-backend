@@ -3,6 +3,7 @@ import { PaginationDto } from "src/shared/dtos"
 import { JwtAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateSchoolDto } from "../dtos"
+import { FilterDashboardSchoolDto } from "../dtos/schools/filter-dashboard-school.dto"
 import { FilterSchoolDto } from "../dtos/schools/filter-school.dto"
 import { SchoolsService } from "../services/schools.service"
 
@@ -13,8 +14,12 @@ export class SchoolsController {
 	@UseGuards(JwtAuthGuard)
 	@UseGuards(RoleAuthGuard)
 	@Get(":cityId")
-	async getByCityID(@Query() paginationDto: PaginationDto, @Param("cityId") cityId: number) {
-		return this.schoolsService.getByCityID(paginationDto, cityId)
+	async getByCityID(
+		@Query() paginationDto: PaginationDto,
+		@Query() filterDashboardSchoolDto: FilterDashboardSchoolDto,
+		@Param("cityId") cityId: number
+	) {
+		return this.schoolsService.getByCityID(paginationDto, filterDashboardSchoolDto, cityId)
 	}
 
 	@Get()
