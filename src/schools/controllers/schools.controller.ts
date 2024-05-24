@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common"
-import { RoleAuthGuard } from "src/shared/guards"
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common"
+import { PaginationDto } from "src/shared/dtos"
+import { JwtAuthGuard, RoleAuthGuard } from "src/shared/guards"
 
 import { CreateSchoolDto } from "../dtos"
 import { FilterSchoolDto } from "../dtos/schools/filter-school.dto"
@@ -8,6 +9,13 @@ import { SchoolsService } from "../services/schools.service"
 @Controller("schools")
 export class SchoolsController {
 	constructor(private readonly schoolsService: SchoolsService) {}
+
+	@UseGuards(JwtAuthGuard)
+	@UseGuards(RoleAuthGuard)
+	@Get(":cityId")
+	async getByCityID(@Query() paginationDto: PaginationDto, @Param("cityId") cityId: number) {
+		return this.schoolsService.getByCityID(paginationDto, cityId)
+	}
 
 	@Get()
 	async getFiltered(@Query() filterSchoolDto: FilterSchoolDto) {
